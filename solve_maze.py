@@ -6,36 +6,47 @@ import random
 
 BIT_SOLUTION = 0b0000010010010110
 # Solve maze using Pre-Order DFS algorithm, terminate with solution
-def solve_dfs(m):
-    stack = []
-    current_cell = 0
-    visited_cells = 1
 
-    while current_cell != m.total_cells -1:
-        print(current_cell)
-        unvisited_neighbors = m.cell_neighbors(current_cell)
-        if len(unvisited_neighbors) >= 1:
-            # choose random neighbor to be new cell
-            new_cell_index = random.randint(0, len(unvisited_neighbors) - 1)
-            new_cell, compass_index = unvisited_neighbors[new_cell_index]
-            # knock down wall between it and current cell using visited_cell
-            m.visit_cell(current_cell, new_cell, compass_index)
-            # push current cell to stack
-            stack.append(current_cell)
-            # set current cell to new cell
-            current_cell = new_cell
-            # add 1 to visited cells
-            visited_cells += 1
-        else:
-            m.backtrack(current_cell)
-            current_cell = stack.pop()
-            print("run")
-        m.refresh_maze_view()
-    m.state = 'idle'
+"""
+mazes.cell_neighbors(current_cell): 
+    回傳一個list，裡面是每個current_cell還沒走過的格子，包含座標還有方向(coordinate, direction)
+    
+mazes.visit_cell(current_cell, coordinate, direction): 
+    讓coordinate這個座標被標記為走過了
+    
+mazes.refresh_maze_view(): 
+    更新畫面
+"""
+def dfs_recursive(mazes, current_cell):
+    if current_cell != mazes.total_cells-1:
+        # 如果還沒走到終點
+        for new_cell in mazes.cell_neighbors(current_cell):  # new_cell(格子座標, 相對方向)的tuple型別
+            # 如果有可以走的路要做什麼?
+            # START YOUR CODE #
+                                                    # 1. 要讓節點標示為走過
+                                                    # 2. 更新迷宮畫面
+            # END YOUR CODE #
+            if dfs_recursive(mazes, "?"):   # 3. DFS 新的點
+                return True
+            else:                                   # 如果還沒走到終點
+                mazes.backtrack(current_cell)
+                mazes.refresh_maze_view()
+                
+        mazes.backtrack(current_cell)
+        mazes.refresh_maze_view()
+        return False
+    else:
+        print("Goal!")
+        return True
+
+def solve_dfs(mazes):
+    current_cell = 0
+    dfs_recursive(mazes, current_cell)
+    mazes.state = 'idle'
 
 
 # Solve maze using BFS algorithm, terminate with solution
-def solve_bfs(m):
+def solve_bfs(mazes):
     """
     create a queue
     set current cell to 0
@@ -60,19 +71,19 @@ def solve_bfs(m):
     in_direction = 0b0000
     visited_cells = 0
     queue.insert(0, (cur_cell, in_direction))
-    while not cur_cell == len(m.maze_array) - 1 and len(queue) > 0:
+    while not cur_cell == len(mazes.maze_array) - 1 and len(queue) > 0:
         cur_cell, in_direction = queue.pop()
-        m.bfs_visit_cell(cur_cell, in_direction)
+        mazes.bfs_visit_cell(cur_cell, in_direction)
         visited_cells += 1
-        m.refresh_maze_view()
-        neighbors = m.cell_neighbors(cur_cell)
+        mazes.refresh_maze_view()
+        neighbors = mazes.cell_neighbors(cur_cell)
         for neighbor in neighbors:
             queue.insert(0, neighbor)
-    m.reconstruct_solution(cur_cell)
-    m.state = "idle"
+    mazes.reconstruct_solution(cur_cell)
+    mazes.state = "idle"
 
-def print_solution_array(m):
-    solution = m.solution_array()
+def print_solution_array(mazes):
+    solution = mazes.solution_array()
     print('Solution ({} steps): {}'.format(len(solution), solution))
 
 
