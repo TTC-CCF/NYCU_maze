@@ -72,6 +72,7 @@ set state to 'solve'"""
     #def x_y
 
 def main():
+    
     current_maze = maze.Maze('create')
     create_dfs(current_maze)
     while 1:
