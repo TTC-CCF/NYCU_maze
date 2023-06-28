@@ -56,8 +56,9 @@ class Maze:
 
     # Return cell neighbors within bounds of the maze
     # Use self.state to determine which neighbors should be included
-    def cell_neighbors(self, cell):
+    def cell_neighbors(self, node):
         #  Logic for getting neighbors based on self.state
+        cell = node[0]
         x, y = self.x_y(cell)
         neighbors = []
         for i in range(4):
@@ -83,7 +84,10 @@ class Maze:
 
     # Visit a cell along a possible solution path
     # Update solution bits of from_cell and backtrack bits of to_cell
-    def visit_cell(self, from_cell, to_cell, compass_index):
+    def visit_cell(self, center, neighbor):#to_cell, compass_index):
+        from_cell = center[0]
+        to_cell = neighbor[0]
+        compass_index = neighbor[1]
         self.maze_array[from_cell] &= ~SOLUTION_BITS
         self.maze_array[from_cell] |= (WALLS[compass_index] << 8)
         self.maze_array[to_cell] |= (OPPOSITE_WALLS[compass_index] << 12)
@@ -91,7 +95,8 @@ class Maze:
 
     # Backtrack from cell
     # Blank out the solution bits so it is no longer on the solution path
-    def backtrack(self, cell):
+    def backtrack(self, node):
+        cell = node[0]
         self.maze_array[cell] &= ~SOLUTION_BITS
         self.draw_backtracked_cell(cell)
 

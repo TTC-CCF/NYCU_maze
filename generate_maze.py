@@ -6,7 +6,7 @@ def create_dfs(m):
     # TODO: Implement create_dfs
     stack = []
     # choose a cell index at random from the grid to be current cell
-    current_cell = random.randint(0, m.total_cells - 1)
+    current_cell = (random.randint(0, m.total_cells - 1), 'RIGHT')
     # set visited cells to 1
     visited_cells = 1
 
@@ -19,11 +19,11 @@ def create_dfs(m):
             new_cell_index = random.randint(0, len(unvisited_neighbors) - 1)
             new_cell, compass_index = unvisited_neighbors[new_cell_index]
     		# knock down wall between it and current cell using connect_cells
-            m.connect_cells(current_cell, new_cell, compass_index)
+            m.connect_cells(current_cell[0], new_cell, compass_index)
             # push current cell to stack
             stack.append(current_cell)
         	# set current cell to new cell
-            current_cell = new_cell
+            current_cell = (new_cell, 'right')
         	# add 1 to visited cells
             visited_cells +=1
         else:

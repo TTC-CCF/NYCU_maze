@@ -7,28 +7,30 @@ import random
 BIT_SOLUTION = 0b0000010010010110
 # Solve maze using Pre-Order DFS algorithm, terminate with solution
 
+def is_goal(mazes, current_cell):
+    return current_cell[0] == mazes.total_cells-1
 
 def dfs_recursive(mazes, current_cell):
     """
+    current_cell: 現在的節點
     mazes.cell_neighbors(current_cell): 
-        回傳一個list，裡面是每個current_cell還沒走過的格子
-        ，包含座標還有方向(coordinate, direction)
-        
-    mazes.visit_cell(current_cell, coordinate, direction): 
-        讓coordinate這個座標被標記為走過了
+        回傳一個串列，裡面是每個current_cell還沒走過的新節點
+
+    mazes.visit_cell(current_cell, new_cell): 
+        讓new_cell這個節點被標記為走過了
         
     mazes.refresh_maze_view(): 
         更新畫面
     """
-    if current_cell != mazes.total_cells-1:
+    if not is_goal(mazes, current_cell):
     # 如果還沒走到終點
-        for new_cell in mazes.cell_neighbors(current_cell): # new_cell(格子座標, 相對方向)的tuple型別
+        for new_cell in mazes.cell_neighbors(current_cell): # new_cell: 可以走的新節點
             # 如果有可以走的路要做什麼?
             # START YOUR CODE #
                                     # 1. 要讓節點標示為走過
                                     # 2. 更新迷宮畫面
+            if dfs_recursive(mazes, "?"):   # 3. DFS 新的點 (填入"?")
             # END YOUR CODE #
-            if dfs_recursive(mazes, "?"):   # 3. DFS 新的點
                 return True
             else:                                           # 如果還沒走到終點
                 mazes.backtrack(current_cell)
@@ -42,7 +44,7 @@ def dfs_recursive(mazes, current_cell):
         return True
 
 def solve_dfs(mazes):
-    current_cell = 0
+    current_cell = (0, 'RIGHT')
     dfs_recursive(mazes, current_cell)
     mazes.state = 'idle'
 
