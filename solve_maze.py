@@ -29,7 +29,7 @@ def dfs_recursive(mazes, current_cell):
             # START YOUR CODE #
                                     # 1. 要讓節點標示為走過
                                     # 2. 更新迷宮畫面
-            if dfs_recursive(mazes, "__fill_in__"):   # 3. DFS 新的點 (填入"?")
+            if dfs_recursive(mazes, "__fill_in__"):   # 3. DFS 新的點 (填入"__fill_in__")
             # END YOUR CODE #
                 return True
             else:                                           # 如果還沒走到終點
